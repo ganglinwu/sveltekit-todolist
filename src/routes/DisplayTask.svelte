@@ -25,7 +25,6 @@ async function handleUpdateTodo(evt, todoID) {
     completed
   }
 
-  console.log("debug formState", formState)
     try {
       const response = await fetch(url, {
         method: "PATCH",
@@ -47,7 +46,29 @@ async function handleUpdateTodo(evt, todoID) {
     }
 }
 
+function randomPromptOrConfirm() {
+    if ((Math.random()*2) > 1) {
+     let userReply = prompt("Please type in <delete> (without the brackets) to confirm delete");
+     if (userReply !== "delete") {
+     alert('Delete cancelled')
+       return false
+    } else {
+      return true
+    }
+  } else {
+    if (!confirm("Are you sure you want to delete?")) {
+      alert('Delete cancelled')
+      return
+    } else {
+      return true
+    }
+  }
+}
+
 async function handleDeleteTodo(todoID) {
+    if (!randomPromptOrConfirm()) {
+    return
+  }
     const url = "http://localhost:8080/todo/" + todoID
 
     try {
@@ -70,6 +91,7 @@ async function handleDeleteTodo(todoID) {
 function handleNameInput(e) {
   name = e.currentTarget.textContent
 }
+
 function handleDescriptionInput(e) {
   description = e.currentTarget.textContent
 }
@@ -84,13 +106,18 @@ function handlePriorityInput(e) {
 }
 
 function handleCompletedInput(e) {
-  console.log("debug event inside handleCompletedInput", e)
   completed = e.target.checked
 }
 
 
 function toggleEditable() {
   editable = !editable
+}
+
+function convertUpdateAtToDateString(updated_at) {
+  let updated_at_date = new Date(updated_at.T * 1000 + 8*60 *60*1000)
+  return updated_at_date.toISOString()
+  // return "2025-03-20"
 }
 
 </script>
@@ -166,11 +193,38 @@ function toggleEditable() {
     <div style="width:100%; color:grey">
      <li class="taskname" contenteditable={editable} onblur={(e)=>handleNameInput(e)}><s>{task.name}</s></li>
      <li class="taskdesc" contenteditable={editable} onblur={(e)=>handleDescriptionInput(e)}><s>{task.description}</s></li>
-     <li class="dateandproj" style="display:flex; justify-content:space-between;">
-        <div>{task.dueDate}</div>
+     <li class="dateandproj" style="display:flex; justify-content:space-between; padding-right:2rem;">
+        <div>{`due : ` + task.dueDate}</div>
+        <div>{`completed : ` + convertUpdateAtToDateString(task.updated_at)}</div>
+        {#if !editable}
+        <div>{` `}</div>
+        {/if}
+        {#if editable}
+          <div style="display:flex; gap:1rem;">
+            <legend>Completed?</legend>
+              <input type="checkbox" id='completed' checked={task.completed} onchange={(e)=>handleCompletedInput(e)}/>
+          </div>
+        {/if}
+      </li>
+    </div>  
+    <div>
+     <div>
+     {#if editable} 
+       <button type="button" onclick={(e)=> handleUpdateTodo(e, task._id)}>
+         Save
+        </button>
+     {/if}
+     {#if !editable}
+       <button type="button" onclick={() => toggleEditable()}>
+         Edit
+       </button>
+      {/if}
+     </div>
+     <button type="button" disabled style="color:grey">
+        delete
+     </button>
       <div>{proj.projname}</div>
-        </li>
-      </div>  
+    </div>
   {/if}
 </ul>
 <style>

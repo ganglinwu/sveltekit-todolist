@@ -27,7 +27,7 @@ function showAddNewTaskUI() {
     description,
       dueDateString,
     priority,
-    completed
+    completed,
     }
 
     const url = "http://localhost:8080/proj/" + projID
