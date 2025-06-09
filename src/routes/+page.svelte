@@ -33,7 +33,7 @@ for (const proj of data.projectlist) {
   <div>
     {#each data.projectlist as proj (proj._id)}
       {#each proj.tasks as task (task._id)}
-        <DisplayTask task={task} proj={proj}/>
+        <DisplayTask task={task} proj={proj} />
       {/each}
     {/each}
   </div>

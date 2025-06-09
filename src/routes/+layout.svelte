@@ -21,7 +21,6 @@ function showAddNewTaskUI() {
   async function handleSubmit(e) {
     e.preventDefault()
     const dueDateParsed = new Date(dueDate)
-    console.log("debug dueDateParsed", dueDateParsed)
     const dueDateString = dueDateParsed.toISOString()
     const todoData = {
     name,
@@ -32,7 +31,6 @@ function showAddNewTaskUI() {
     }
 
     const url = "http://localhost:8080/proj/" + projID
-    console.log("debug url", url)
 
     try {
       const response = await fetch(url, {
