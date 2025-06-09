@@ -1,1 +1,29 @@
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech&display=swap");
+@import "tailwindcss";
+
+:root {
+  --base-clr: #fffbfa;
+  --line-clr: #49c6e5;
+  --hover-clr: #54defd;
+  --text-clr: #00bd9d;
+  --accent-clr: #54defd;
+  --secondary-text-clr: #8bd7d2;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-family: "Share Tech", Verdana, Arial;
+  font-size: 32px;
+  line-height: 1.5rem;
+}
+body {
+  height: 100dvh;
+  background-color: var(--base-clr);
+  color: var(--text-clr);
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  grid-template-rows: 800px minmax(100px, max-content);
+  align-items: start;
+}

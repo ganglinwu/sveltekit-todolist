@@ -1,88 +1,52 @@
 <script lang="ts">
 
 // svelte components
-import TopBar from "./TopBar.svelte"
-import TitleBar from "./TitleBar.svelte"
+import TopBar from "../../TopBar.svelte"
+import TitleBar from "../../TitleBar.svelte"
 
 // state object store
-import {stateObj, setProjectState} from "./state.svelte.ts"
+import {stateObj} from "../../state.svelte.ts"
 
 // utility function to determine tag color of task
-import {tagColor} from './util.ts'
-
-// title of the page
-let title = "All Todos"
+import {tagColor} from '../../util.ts'
 
 // data loaded (fetch API) from +page.server.ts
 let {data} = $props()
 
-for (const proj of data.projectlist) {
-  setProjectState([proj.projname, proj._id])
+// title of the page
+let title = data.proj.projname
+
+for (const task of data.proj.tasks) {
+  task.project = title
 }
 
-async function handleDeleteTodo(todoID) {
-    const url = "http://localhost:8080/todo/" + todoID
-
-    try {
-      const response = await fetch(url, {
-        method: "DELETE",
-      })
-
-    if (response.ok) {
-        alert('Todo deleted successfully!')
-        window.location.reload()
-      } else {
-        alert('Something went wrong')
-      }
-    }
-    catch (err) {
-      console.error('Error:', err)
-    }
-}
-
-// temporary stuff here
+$inspect(data)
 </script>
-
-
-
 
 <TopBar></TopBar>
 <TitleBar {title}/>
 
 <main>
   <div>
-    {#each data.projectlist as proj (proj._id)}
-      {#each proj.tasks as task (task._id)}
-        <p style="display:none;">{task.project = proj.projname}</p>
+      {#each data.proj.tasks as task (task._id)}
+        <p style="display:none;">{task.project = data.proj.projname}</p>
         {@render displayTasks(task)}
       {/each}
-    {/each}
   </div>
 </main>
 {#snippet displayTasks(task)}
-  <script>
-    let editable = $state(false)
-  </script>
     <ul>
       <div class="tagColor" style:background-color={tagColor(task.priority)}>
       </div>
       <div style="width:100%;">
-        <li class="taskname" contenteditable={editable}>{task.name}</li>
-        <li class="taskdesc" contenteditable={editable}>{task.description}</li>
-        <li class="dateandproj">
-          <div contenteditable={editable}>{task.dueDate}</div>
-        </li>
-      </div>
-      <div>
-        <div>edit</div>
-        <button type="button" onclick={()=> handleDeleteTodo(task._id)}>
-          delete
-        </button>
-        <div>
-          <a href={`/proj/`+task.project}>
-            {task.project}
-          </a>
-        </div>
+    <li class="taskname">{task.name}</li>
+      <li class="taskdesc">{task.description}</li>
+      <li class="dateandproj">
+      <div>{task.dueDate}</div>
+      <a href={`/proj/`+task.project}>
+      <div>{task.project}</div>
+      </a>
+    </li>
       </div>
     </ul>
 {/snippet}
