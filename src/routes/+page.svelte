@@ -1,14 +1,13 @@
 <script lang="ts">
 
 // svelte components
+import DisplayTask from "./DisplayTask.svelte"
 import TopBar from "./TopBar.svelte"
 import TitleBar from "./TitleBar.svelte"
 
 // state object store
 import {stateObj, setProjectState} from "./state.svelte.ts"
 
-// utility function to determine tag color of task
-import {tagColor} from './util.ts'
 
 // title of the page
 let title = "All Todos"
@@ -20,25 +19,6 @@ for (const proj of data.projectlist) {
   setProjectState([proj.projname, proj._id])
 }
 
-async function handleDeleteTodo(todoID) {
-    const url = "http://localhost:8080/todo/" + todoID
-
-    try {
-      const response = await fetch(url, {
-        method: "DELETE",
-      })
-
-    if (response.ok) {
-        alert('Todo deleted successfully!')
-        window.location.reload()
-      } else {
-        alert('Something went wrong')
-      }
-    }
-    catch (err) {
-      console.error('Error:', err)
-    }
-}
 
 // temporary stuff here
 </script>
@@ -53,39 +33,11 @@ async function handleDeleteTodo(todoID) {
   <div>
     {#each data.projectlist as proj (proj._id)}
       {#each proj.tasks as task (task._id)}
-        <p style="display:none;">{task.project = proj.projname}</p>
-        {@render displayTasks(task)}
+        <DisplayTask task={task} proj={proj}/>
       {/each}
     {/each}
   </div>
 </main>
-{#snippet displayTasks(task)}
-  <script>
-    let editable = $state(false)
-  </script>
-    <ul>
-      <div class="tagColor" style:background-color={tagColor(task.priority)}>
-      </div>
-      <div style="width:100%;">
-        <li class="taskname" contenteditable={editable}>{task.name}</li>
-        <li class="taskdesc" contenteditable={editable}>{task.description}</li>
-        <li class="dateandproj">
-          <div contenteditable={editable}>{task.dueDate}</div>
-        </li>
-      </div>
-      <div>
-        <div>edit</div>
-        <button type="button" onclick={()=> handleDeleteTodo(task._id)}>
-          delete
-        </button>
-        <div>
-          <a href={`/proj/`+task.project}>
-            {task.project}
-          </a>
-        </div>
-      </div>
-    </ul>
-{/snippet}
 <style>
   @media screen and (min-width: 48rem) {
     main {
@@ -112,40 +64,5 @@ async function handleDeleteTodo(todoID) {
     display: flex;
     flex-direction: column;
     align-items: start;
-  }
-  .tagColor{
-    width:3%;
-    height:90%;
-    margin-left:1%;
-    margin-right:1%;
-    algin-self:center;
-  }
-  main > div ul {
-    display:flex;
-    padding-top: 1%;
-    padding-right: 3%;
-    width:100%;
-    border: 1px solid grey;
-    border-left: 0;
-    border-right: 0;
-    border-top:0;
-    &:hover {
-      opacity: 1;
-    }
-  }
-  .taskname{
-    display:flex;
-    align-self:top;
-  }
-  .taskdesc{
-    font-size:x-large;
-    opacity: 0.7;
-  }
-  .dateandproj{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    font-size: x-large;
-    opacity: 0.7;
   }
 </style>
