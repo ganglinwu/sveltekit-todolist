@@ -15,17 +15,23 @@ function showAddNewTaskUI() {
   let name = $state('')
   let description = $state('')
   let dueDate = $state('')
+  let dueDateString = $state('')
   let priority = $state('')
   let completed = $state(false)
+  let projname = $state('')
 
-  async function handleSubmit(e) {
+  async function handleSubmitTaskForm(e) {
     e.preventDefault()
-    const dueDateParsed = new Date(dueDate)
-    const dueDateString = dueDateParsed.toISOString()
+    if (dueDate !== "") {
+      const dueDateParsed = new Date(dueDate)
+      dueDateString = dueDateParsed.toISOString()
+    } else {
+      dueDateString = ''
+    }
     const todoData = {
     name,
     description,
-      dueDateString,
+    dueDateString,
     priority,
     completed,
     }
@@ -52,6 +58,35 @@ function showAddNewTaskUI() {
       console.error('Error:', err)
     }
   }
+  async function handleSubmitProjectForm(e) {
+    e.preventDefault()
+
+    const proj = {
+    projname,
+    }
+
+    const url = "http://localhost:8080/proj/"
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(proj),
+        headers: {
+        "Content-Type": "application/json"
+      }
+      })
+
+    if (response.ok) {
+        alert('Project created successfully!')
+        window.location.reload()
+      } else {
+        alert('Something went wrong')
+      }
+    }
+    catch (err) {
+      console.error('Error:', err)
+    }
+  }
 </script>
 
 <nav>
@@ -60,7 +95,7 @@ function showAddNewTaskUI() {
 <main>
 {@render children()}
 {#if stateObj.showAddNewTask}
-  <form onsubmit={(e)=>handleSubmit(e)}>
+  <form onsubmit={(e)=>handleSubmitTaskForm(e)}>
     <input type='text' id='taskname' name='taskname' bind:value={name} style="font-size:60px" placeholder='Name of task'>
     <input type='text' id='description' name='description' bind:value={description} style="font-size:30px; vertical-align:top;" placeholder='describe task'>
     <div class='formBottom'style="font-size=20px;">
@@ -95,6 +130,15 @@ function showAddNewTaskUI() {
         </div>
     </div>
   </form>
+{/if}
+{#if stateObj.showAddNewProject}
+    <form onsubmit={(e)=> handleSubmitProjectForm(e)}>
+      <input type='text' id='projname' name='projname' bind:value={projname} style="font-size:60px" placeholder='Name of project'>
+      <div class='formBottom-r' style="margin-top:1rem;">
+      <button onclick ={() => showAddNewTaskUI()} class='cancelBtn'>Cancel</button>
+      <button type='submit' class='saveBtn'>Save</button>
+        </div>
+    </form>
 {/if}
   </main>
 

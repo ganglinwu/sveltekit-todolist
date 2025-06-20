@@ -117,7 +117,6 @@ function toggleEditable() {
 function convertUpdateAtToDateString(updated_at) {
   let updated_at_date = new Date(updated_at.T * 1000 + 8*60 *60*1000)
   return updated_at_date.toISOString()
-  // return "2025-03-20"
 }
 
 </script>

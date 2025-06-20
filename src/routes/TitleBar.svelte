@@ -30,5 +30,6 @@ let {title}: {
   h1{
     display:flex;
     justify-content: start;
+    padding-left:2rem;
   }
 </style>

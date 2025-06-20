@@ -10,8 +10,7 @@ import {stateObj, setProjectState} from "./state.svelte.ts"
 
 
 // title of the page
-let title = "All Todos"
-
+let title = $derived("All Todos ")
 // data loaded (fetch API) from +page.server.ts
 let {data} = $props()
 
@@ -21,6 +20,7 @@ for (const proj of data.projectlist) {
 
 
 // temporary stuff here
+$inspect(stateObj)
 </script>
 
 
@@ -64,5 +64,7 @@ for (const proj of data.projectlist) {
     display: flex;
     flex-direction: column;
     align-items: start;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 </style>
