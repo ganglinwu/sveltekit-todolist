@@ -2,7 +2,7 @@ import type { PageServerLoad, Actions } from "./$types";
 import { getFormState, getProjectState } from "./state.svelte.ts";
 
 export const load: PageServerLoad = async () => {
-  const response = await fetch("http://localhost:8080/proj");
+  const response = await fetch("http://18.140.54.239/proj");
   const responseBody = await response.json();
 
   return {
