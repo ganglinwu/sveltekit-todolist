@@ -1,4 +1,4 @@
-export let stateObj = $state({
+export const stateObj = $state({
   showAddNewTask: false,
   showAddNewProject: false,
   showSideNavRecent: false,
@@ -14,13 +14,13 @@ export let stateObj = $state({
   projects: {},
 });
 
-export function getProjectState() {
+export const getProjectState = () => {
   return stateObj.projects;
-}
+};
 
-export function setProjectState([key, value]) {
+export const setProjectState = ([key, value]) => {
   stateObj.projects[key] = value;
-}
+};
 
 export function setSortBy(str) {
   stateObj.sortBy = str;

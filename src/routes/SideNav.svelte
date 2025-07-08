@@ -62,7 +62,7 @@ function showSideNavProjects() {
       {#if stateObj.showSideNavProjects}
           <div transition:slide>
         {#each Object.entries(stateObj.projects) as [key,value] (value)}
-           <a href={`/proj/`+key} style="justify-content:center;">{key}</a>
+           <a href={`/proj/`+value} style="justify-content:center;">{key}</a>
         {/each}
            </div>
       {/if}
